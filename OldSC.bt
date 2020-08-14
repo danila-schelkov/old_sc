@@ -1,0 +1,87 @@
+//------------------------------------------------
+//--- 010 Editor v9.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+BigEndian();
+
+typedef struct {
+    ushort length;
+    char str[length];
+} String <read=stringRead>;
+
+string stringRead(String &v) {
+    if (v.length > 0) {
+        return v.str;
+    } else {
+        return "";
+    }
+};
+
+
+typedef struct {
+    String exportName;
+    ushort posX;
+    ushort posY;
+    ushort sizeX;
+    ushort sizeY;
+} Export <read=exportRead>;
+
+string exportRead(Export &v) {
+    local string s;    
+    SPrintf(s, "%s (%dx%d)", v.exportName.str, v.sizeX, v.sizeY);
+    return s;
+};
+
+
+typedef struct {
+    uint length;
+    char type[4];
+    char chunk_data[length];
+    char crc[4];
+} png_chunk;
+
+
+typedef struct {
+    String textureName;
+    String maybeGroup;
+    ushort sizeX;
+    ushort sizeY;
+    char unk[4];
+    char png_sig[8];
+    uint header_length;
+    char type[4];
+    uint size[2];
+    ubyte bits;
+    char unk1[4];
+    char crc[4];
+    png_chunk img;
+    png_chunk end;
+} Texture <read=textureRead>;
+
+string textureRead(Texture &v) {
+    local string s;    
+    SPrintf(s, "%s (%dx%d)", v.textureName.str, v.sizeX, v.sizeY);
+    return s;
+};
+
+struct FILE {
+    local int i;
+
+    ushort exportsCount;
+    for (i = 0; i< exportsCount; i++) {
+        Export export;
+    }
+    ushort texturesCount;
+    for (i = 0; i< texturesCount; i++) {
+        Texture texture;
+    }
+} file;
