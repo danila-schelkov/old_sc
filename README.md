@@ -1,1 +1,2 @@
-# old_sc
+# Old SC
+Authors: Vorono4ka, Kjkui
